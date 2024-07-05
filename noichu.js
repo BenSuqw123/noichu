@@ -43,13 +43,17 @@ submitBtn.addEventListener('click', (e) => {
         const lastLetter = previousWord.slice(-1);
         
         if (userInput.startsWith(lastLetter) ) {
-            const wordListItem = document.createElement('li');
-            wordListItem.textContent = userInput;
-            wordList.appendChild(wordListItem);
+            
             
             if(i >= 2 && isWordInList(userInput,wordList)){
-                alert(`Sorry, ${userInput} had been entranced`);
-                gameOver();
+            console.log(wordList)
+             alert(`Sorry, ${userInput} had been entranced`);
+            // gameOver();
+            }
+            else{
+                const wordListItem = document.createElement('li');
+                wordListItem.textContent = userInput;
+                wordList.appendChild(wordListItem);  
             }
 
             i = i+1;
