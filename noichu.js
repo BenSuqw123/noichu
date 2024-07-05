@@ -88,7 +88,7 @@ submitBtn.addEventListener('click', (e) => {
                
                 gameOver();
                 
-            }, 1000000); // 10 seconds
+            }, 10000); // 10 seconds
         } else {
             alert(`Sorry, ${userInput} doesn't start with ${lastLetter}`);
         }
@@ -110,4 +110,4 @@ function gameOver() {
 timerInterval = setInterval(() => {
     alert(`Time's up! Player ${currentPlayer} couldn't think of a word.`);
     gameOver();
-}, 1000000); // 10 seconds
+}, 10000); // 10 seconds
