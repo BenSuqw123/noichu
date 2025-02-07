@@ -4,7 +4,7 @@
   "main": "game.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "game": "nodemon ./src/game.js"
+    "game": "node ./src/sever.js"
   },
   "keywords": [],
   "author": "BenSu",
