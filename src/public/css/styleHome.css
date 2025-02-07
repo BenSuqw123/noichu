@@ -1,0 +1,130 @@
+/* Toàn bộ trang */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #FF6F61, #FF9A8B);
+    /* Gradient nền ấm áp */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    color: #fff;
+    overflow: hidden;
+    animation: backgroundAnimation 10s infinite alternate;
+    /* Animation nền */
+}
+
+/* Hiệu ứng chuyển động cho nền */
+@keyframes backgroundAnimation {
+    0% {
+        background: linear-gradient(135deg, #FF6F61, #FF9A8B);
+    }
+
+    100% {
+        background: linear-gradient(135deg, #4CAF50, #81C784);
+    }
+}
+
+/* Container chứa tiêu đề và các nút */
+.container {
+    background: rgba(0, 0, 0, 0.6);
+    /* Nền tối mờ */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    transform: scale(1);
+    animation: scaleIn 0.8s ease-in-out;
+}
+
+/* Hiệu ứng mở rộng cho container */
+@keyframes scaleIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Tiêu đề */
+h1 {
+    font-size: 2.8rem;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+    /* Thêm bóng đổ cho tiêu đề */
+}
+
+/* Phần button */
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Các nút */
+.play-button-link {
+    text-decoration: none;
+}
+
+.play-button {
+    background: #4CAF50;
+    /* Màu nền xanh */
+    color: white;
+    border: none;
+    padding: 18px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(0);
+}
+
+/* Hiệu ứng hover cho nút */
+.play-button:hover {
+    background: #388E3C;
+    /* Màu nền khi hover */
+    transform: translateY(-6px);
+    /* Hiệu ứng nổi lên khi hover */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Hiệu ứng khi nút bị nhấn */
+.play-button:active {
+    transform: translateY(0);
+    background: #2C6B2F;
+    /* Màu khi nhấn */
+}
+
+/* Hiệu ứng chuyển động nhẹ cho nút */
+.play-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.5);
+    /* Tạo hiệu ứng viền khi focus */
+}
+
+/* Hiệu ứng khi vào trang */
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Thêm hiệu ứng chuyển động cho nút */
+.buttons a {
+    animation: slideIn 1s ease-out;
+}

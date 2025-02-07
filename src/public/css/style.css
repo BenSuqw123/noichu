@@ -1,0 +1,185 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#game-board {
+    width: 80%;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+#input-field {
+    width: 50%;
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+}
+
+#countdown-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 10px solid #f3f3f3;
+    position: relative;
+    background-color: #fff;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Phần hình tròn thể hiện tiến trình */
+#progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #4caf50;
+    transform-origin: center;
+    transform: rotate(-90deg);
+    transition: transform 1s linear;
+}
+
+/* Hiển thị thời gian còn lại */
+#time-text {
+    font-size: 30px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
+#score-board {
+    position: absolute;
+    top: 5%;
+    right: 0;
+    width: 10%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.game {
+    filter: blur(5px);
+    display: none;
+}
+
+.start {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    z-index: 10;
+}
+
+.start h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.start p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.start button {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.start button:hover {
+    background-color: #45a049;
+}
+
+.game.show {
+    filter: blur(0px);
+    display: block;
+}
+
+.try-again-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 30px 50px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 90%;
+    z-index: 100;
+    display: none;
+}
+
+.try-again-modal h1 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+
+
+}
+
+.btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.yes-btn {
+    background-color: #2ecc71;
+
+}
+
+.no-btn {
+    background-color: #e74c3c;
+
+}
+
+
+.yes-btn:hover {
+    background-color: #27ae60;
+}
+
+.no-btn:hover {
+    background-color: #c0392b;
+}
+
+.try-again-modal.show {
+    display: block;
+}

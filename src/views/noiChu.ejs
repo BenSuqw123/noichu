@@ -1,0 +1,59 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noi Chu</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <div class="start">
+        <h1>RULE</h1>
+        <p>1/Don't think more than 10 seconds</p>
+        <p>2/You go first</p>
+        <p>3/Tail of word before is the head of your word</p>
+        <p>4/You might be win</p>
+
+        <button id="startButton">START</button>
+    </div>
+    <div class="game">
+        <h1>Nối chữ chill chill</h1>
+        <div id="game-board">
+            <div id="countdown-circle">
+                <div id="progress-bar"></div>
+                <div id="time-text">10</div>
+            </div>
+            <div id="score-board">
+                <p>Player 1: <span id="player-1-score">0</span></p>
+                <p>Player AI: <span id="player-2-score">0</span></p>
+
+            </div>
+            <p id="player-turn">Player 1's turn</p>
+            <p id="previous-word">No previous word</p>
+            <p id="word-start">Empty</p>
+            <input id="input-field" type="text" placeholder="Enter a word">
+            <ul id="word-list"></ul>
+
+
+        </div>
+    </div>
+    <div class="try-again-modal">
+        <h1>DO YOU WANT TO TRY AGAIN?</h1>
+        <div class="button-container">
+            <a href="/noichu">
+                <button class="btn yes-btn">Yes</button>
+            </a>
+            <a href="/">
+                <button class="btn no-btn">No</button>
+            </a>
+        </div>
+    </div>
+
+
+    <script src="./javascript/noiChu.js"></script>
+</body>
+
+</html>
