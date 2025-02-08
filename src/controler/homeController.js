@@ -7,8 +7,8 @@ const getHomePage = async (req, res) => {
 const getNoiChuPage = async (req, res) => {
     await res.render('noiChu.ejs')
 }
-const getXinLoiPage = async (req, res) => {
-    await res.render('xinLoi.ejs')
+const getNoiChuOnlPage = async (req, res) => {
+    await res.render('noiChuOnl.ejs')
 }
 
-module.exports = { getHomePage, getNoiChuPage, getXinLoiPage }
+module.exports = { getHomePage, getNoiChuPage, getNoiChuOnlPage }
