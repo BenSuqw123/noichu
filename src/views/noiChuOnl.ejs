@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,40 +7,69 @@
     <title>Noi Chu</title>
     <link rel="stylesheet" href="./css/styleOnl.css">
 </head>
-<script src="/socket.io/socket.io.js"></script>
 
 <body>
-
-    <div class="game">
-        <h1>Nối chữ chill chill</h1>
-
-        <div id="game-board">
-            <div id="countdown-circle">
-                <div id="progress-bar"></div>
-                <div id="time-text">10</div>
-            </div>
-            <div id="score-board">
-                <p>Player 1: <span id="player-1-score">0</span></p>
-                <p>Player 2: <span id="player-2-score">0</span></p>
-
-            </div>
-            <p id="player-turn">Player 1's turn</p>
-            <p id="previous-word">No previous word</p>
-            <p id="word-start">Empty</p>
-            <input id="input-field" type="text" placeholder="Enter a word">
-            <button id="start-button">START</button>
-
+    <div class="head">
+        <h1>Danh sách phòng</h1>
+        <div>
+            <input type="text" id="roomIdInput" placeholder="Nhập ID để tìm phòng">
+            <button id="findRoomBtn">Tìm phòng</button>
         </div>
+        <button id="makeRoom">Tạo Phòng</button>
+    </div>
+    <div class="createRoom">
+        <fieldset>
+            <legend>Tạo Phòng</legend>
+            <form id="createRoomForm" action="/createroom" method="post">
+                <label for="roomName">Tên phòng:</label>
+                <input type="text" id="roomName" name="roomName" placeholder="Nhập ID" required>
+
+                <label for="numberSelect">Số người chơi:</label>
+                <select id="numberSelect" name="players">
+                    <option value="2">2 players</option>
+                    <option value="3">3 players</option>
+                    <option value="4">4 players</option>
+                    <option value="5">5 players</option>
+                </select><br><br>
+
+                <button type="submit">Submit</button>
+                <span id="closeCreateRoom" class="close-btn">&times;</span> <!-- Biểu tượng đóng X -->
+            </form>
+        </fieldset>
     </div>
 
-    <div class="try-again-modal hidden">
-        <h1 class="winner-text">Player X wins!</h1>
-        <h2>DO YOU WANT TO TRY AGAIN?</h2>
-        <a href="/noiChuOnl" class="yes-btn">YES</a>
-        <a href="/" class="no-btn">NO</a>
+    <div class="list">
+        <table id="roomList">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Phòng</th>
+                    <th>Số player trong phòng</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody id="dsroom">
+                <% for (var i=0; i < listUsers.length; i++) { %>
+                    <tr class="<%= listUsers[i].id %>">
+                        <th>
+                            <%= listUsers[i].id %>
+                        </th>
+                        <th>
+                            <%= listUsers[i].name %>
+                        </th>
+                        <th>
+                            <%= listUsers[i].players %>
+                        </th>
+                        <th>
+                            <a href="/noiChuOnl/<%= listUsers[i].id %>">THAM GIA</a>
+                        </th>
+                    </tr>
+                    <%}%>
+            </tbody>
+        </table>
     </div>
 
-
+    <script src="/socket.io/socket.io.js"></script>
     <script src="./javascript/noiChuOnl.js"></script>
 </body>
 

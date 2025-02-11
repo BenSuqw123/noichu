@@ -1,8 +1,11 @@
 const express = require("express");
+require('dotenv').config();
 const http = require("http");
 const { Server } = require("socket.io");
 const route = require('./router/web')
 const configView = require('./config/configview')
+const connection = require('./config/database')
+
 
 const app = express();
 const server = http.createServer(app);
@@ -11,118 +14,177 @@ const io = new Server(server);
 const port = 3000; // Đặt cổng server
 
 
-
-
+// window.location.pathname.split('/').slice(-1)[0]
+// Đảm bảo rằng bạn đã thêm middleware sau vào app.js hoặc server.js
+app.use(express.urlencoded({ extended: true })); // Để xử lý dữ liệu form-urlencoded
+app.use(express.json()); // Để xử lý dữ liệu JSON
 //config template
 configView(app)
+
 //khai bao route
 app.use('/', route)
 
-let players = []; // Lưu trữ danh sách người chơi
-let currentPlayer = 0;  // Chỉ số người chơi hiện tại (0 cho Player 1, 1 cho Player 2)
-let playersReady = 0;
-let countdownInterval;
-let gameOver = false;
-let gameInProgress = false;
 
-io.of('/noiChuOnl').on('connection', (socket) => {
+
+
+let rooms = new Map();  // Sử dụng Map để lưu trữ trạng thái các phòng
+
+io.of('/noiChuOnl').on('connection', async (socket) => {
     console.log('A user connected');
-    if (gameInProgress) {
-        socket.emit('message', 'Một ván chơi đã bắt đầu, vui lòng chờ ván kế tiếp!');
-        return;
+
+    const roomId = socket.handshake.query.roomId;
+    console.log(`User connected to room ${roomId}`);
+    let [rows, fields] = await connection.query('SELECT players FROM Users WHERE id = ?', [roomId]);
+    const maxPlayers = rows && rows.length > 0 ? rows[0].players : 0;
+
+    if (!rooms.has(roomId)) {
+        rooms.set(roomId, {
+            maxPlayers: maxPlayers,
+            players: [],
+            currentPlayer: 0,
+            playersReady: 0,
+            gameInProgress: false,
+            gameOver: false,
+            countdownInterval: null,
+            timeLeft: 10
+        });
     }
-    if (players.length < 2) {
-        players.push(socket.id);
-        if (players.length === 1) {
-            socket.emit('message', 'Bạn là player 1, chờ người chơi còn lại...');
-        } else if (players.length === 2) {
-            socket.emit('message', 'Bạn là player 2');
-            io.of('/noiChuOnl').to(players[0]).emit('message', 'Bạn là player 1');
+
+    // Tham gia phòng
+    socket.join(roomId);
+    socket.emit('message', `Bạn đã tham gia phòng ${roomId}`);
+
+    // Thêm người chơi vào phòng
+    const room = rooms.get(roomId);
+    console.log(maxPlayers)
+    if (room.players.length <= maxPlayers) {
+        for (let i = 0; i < maxPlayers; i++) {
+            if (!room.players[i]) {
+                room.players[i] = socket.id;
+                socket.emit('what', `Bạn là player ${i + 1}, chờ người chơi còn lại...`);
+                if (room.players.length === maxPlayers) {
+                    socket.emit('what', `Bạn là player ${i + 1}`);
+                    io.of('/noiChuOnl').emit('message', `Phòng đã đầy người. Hay nha nut start de bắt đầu.`);
+                }
+                break;
+            }
         }
+    } else {
+
+        socket.emit('message', 'Phòng đã đầy người. Bạn không thể tham gia.');
+        socket.disconnect(true);
     }
     socket.on('start', () => {
-        playersReady += 1;
-        if (playersReady === 2) {
-            console.log('Cả hai người chơi đều đã sẵn sàng');
+        room.playersReady += 1;
+        if (room.playersReady === maxPlayers) {
+            console.log('Mọi người chơi đều đã sẵn sàng');
             io.of('/noiChuOnl').emit('game-start', 'Trò chơi bắt đầu!');
-            io.of('/noiChuOnl').to(players[currentPlayer]).emit('message', 'YOU GO FIRST');
-            io.of('/noiChuOnl').to(players[currentPlayer + 1]).emit('message', 'WAIT FOR FIRST PLAYER');
-            io.of('/noiChuOnl').emit('player-turn', currentPlayer === 0 ? "Player 1's turn" : "Player 2's turn");
-            gameInProgress = true;
-            gameOver = false;
-            resetCountdown();
-        }
-        else {
-            let otherPlayer = players[0] !== socket.id ? players[1] : players[0];
+            io.of('/noiChuOnl').to(room.players[room.currentPlayer]).emit('message', 'YOU GO FIRST');
+            for (let i = 0; i < room.maxPlayers; i++) {
+                if (i !== room.currentPlayer) {
+                    io.of('/noiChuOnl').to(room.players[i]).emit('message', `WAIT FOR PLAYER ${room.currentPlayer + 1}`);
+                }
+            }
+            room.gameInProgress = true;
+            room.gameOver = false;
+            resetCountdown(roomId);
+        } else {
+            let otherPlayer = room.players.find(player => player !== socket.id);
             io.of('/noiChuOnl').to(otherPlayer).emit('message', 'Chờ Player còn lại nhấn Start.');
         }
     });
 
-    // Lắng nghe sự kiện nhập từ mới
     socket.on('new-word', (word) => {
         console.log('Received word: ' + word);
-        console.log('Current player:', currentPlayer);
-        console.log('Players:', players);
-        resetCountdown();
+        console.log('Current player:', room.currentPlayer);
+        console.log('Players:', room.players);
+        resetCountdown(roomId);
 
-        if (socket.id === players[currentPlayer]) {
-            currentPlayer = (currentPlayer + 1) % 2;  // Chuyển lượt
-            io.of('/noiChuOnl').to(players[currentPlayer]).emit('message', `${word}`);
-            io.of('/noiChuOnl').emit('player-turn', currentPlayer === 0 ? "Player 1's turn" : "Player 2's turn");
+        if (socket.id === room.players[room.currentPlayer]) {
+            room.currentPlayer = (room.currentPlayer + 1) % maxPlayers;
+            for (let i = 0; i < room.players.length; i++) {
+                io.of('/noiChuOnl').to(room.players[i]).emit('message', `${word}`);
+            }
+            let turn = `Player ${room.currentPlayer + 1} turn`;
+            io.of('/noiChuOnl').emit('player-turn', turn);
         }
     });
 
+    function resetCountdown(roomId) {
+        const room = rooms.get(roomId);
 
-    // Hàm đặt lại đồng hồ đếm ngược
-    function resetCountdown() {
-
-        if (gameOver) return;
-        if (countdownInterval) clearInterval(countdownInterval);  // Dừng đồng hồ cũ
-        timeLeft = 10;  // Đặt lại thời gian
-        countdownInterval = setInterval(() => {
-            if (timeLeft <= 0) {
-                io.of('/noiChuOnl').emit('message', `Hết giờ! Player ${currentPlayer + 1} không thể nghĩ ra từ`);
-                currentPlayer = (currentPlayer + 1) % 2; // Chuyển lượt
-                io.of('/noiChuOnl').emit('player-turn', `Player ${currentPlayer + 1}'s turn`);
-                gameover(currentPlayer);  // Truyền currentPlayer vào gameover
+        if (room.gameOver) return;
+        if (room.countdownInterval) clearInterval(room.countdownInterval);
+        room.timeLeft = 10;
+        room.countdownInterval = setInterval(() => {
+            if (room.timeLeft <= 0) {
+                io.of('/noiChuOnl').emit('message', `Hết giờ! Player ${room.currentPlayer + 1} không thể nghĩ ra từ`);
+                gameover(roomId);
             } else {
-                timeLeft--;
-                io.of('/noiChuOnl').emit('time-left', timeLeft);  // Gửi thông tin thời gian cho tất cả người chơi
+                room.timeLeft--;
+                io.of('/noiChuOnl').emit('time-left', room.timeLeft);
             }
         }, 1000);
     }
 
-    function gameover(currentPlayer) {
-        io.of('/noiChuOnl').emit('winner', `Player ${currentPlayer + 1} wins!`);
-        gameOver = true;  // Đặt trạng thái trò chơi kết thúc
-        gameInProgress = false;  // Đặt trạng thái game đã kết thúc
-        playersReady = 0; // Reset người chơi sẵn sàng
-        gameOver = true;  // Đặt trạng thái trò chơi kết thúc
+    function gameover(roomId) {
+        const room = rooms.get(roomId);
+        io.of('/noiChuOnl').emit('winner', `Player ${room.currentPlayer + 1} lose!`);
+        room.gameOver = true;
+        room.gameInProgress = false;
+        room.playersReady = 0;
 
-        clearInterval(countdownInterval);  // Dừng đồng hồ đếm ngược
-        return;
+        clearInterval(room.countdownInterval);
     }
 
-
-    // Khi người chơi rời khỏi game
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         console.log('A user disconnected');
 
-        // Xóa người chơi khỏi mảng
-        players = players.filter(player => player !== socket.id);
-        console.log("Players array after disconnect:", players);
+        // Lấy phòng hiện tại và xóa người chơi khỏi phòng
+        const room = rooms.get(roomId);
+        room.players = room.players.filter(player => player !== socket.id);
+        console.log("Players array after disconnect:", room.players);
 
-        // Kiểm tra nếu còn 1 người chơi
-        if (players.length === 1) {
-            io.of('/noiChuOnl').to(players[0]).emit('message', 'Người chơi còn lại đã rời, chờ người chơi mới vào.');
-        }
+        if (room && Array.isArray(room.players)) {
+            room.players = room.players.filter(player => player !== socket.id);
 
-        // Nếu không còn ai trong game
-        if (players.length === 0) {
-            console.log('Không còn người chơi nào trong game.');
+            if (room.players.length === 1) {
+                io.of('/noiChuOnl').to(room.players[0]).emit('message', 'Chỉ còn bạn trong phòng, phòng sẽ bị xóa nếu không có người chơi mới tham gia.');
+            }
+            if (room.players.length === 0) {
+                rooms.delete(roomId);
+                console.log('Phòng đã bị xóa vì không còn người chơi.');
+            }
+        } else {
+            console.log('Phòng không tồn tại hoặc players không phải là mảng.');
         }
     });
 });
+
+
+// io.of('/noiChuOnl').on('connection', (socket) => {
+//     console.log('A user connected');
+
+//     // Lấy roomId từ URL
+//     const roomId = socket.handshake.query.roomId;
+//     console.log(`User connected to room ${roomId}`);
+
+//     // Kiểm tra nếu roomId đã tồn tại, nếu không thì tạo phòng mới
+//     socket.join(roomId);
+//     socket.emit('message', `Bạn đã tham gia phòng ${roomId}`);
+
+//     // Xử lý sự kiện khi người chơi gửi từ mới
+//     socket.on('new-word', (word) => {
+//         console.log(`Word received in room ${roomId}: ${word}`);
+//         // Xử lý logic gửi từ và chuyển lượt ở đây
+//     });
+
+//     // Khi người chơi rời phòng
+//     socket.on('disconnect', () => {
+//         console.log('A user disconnected');
+//         socket.leave(roomId); // Rời khỏi phòng khi ngắt kết nối
+//     });
+// });
 
 
 

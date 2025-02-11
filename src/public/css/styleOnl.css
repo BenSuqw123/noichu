@@ -1,190 +1,205 @@
-/* Căn chỉnh và làm cho toàn bộ game có không gian rộng hơn */
-.game {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    text-align: center;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+/* Reset một số thuộc tính mặc định của trình duyệt */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Thêm phần căn chỉnh cho bảng game */
-#game-board {
-    background-color: #fff;
+/* Toàn bộ body */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    /* Đảm bảo game board có chiều rộng phù hợp */
-    max-width: 600px;
-    /* Giới hạn chiều rộng tối đa */
-    margin-top: 30px;
 }
 
-/* Định dạng nút START */
-#start-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px 30px;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 20px;
-    width: 100%;
-    /* Nút sẽ chiếm toàn bộ chiều rộng của phần chứa */
-    max-width: 200px;
-    /* Giới hạn chiều rộng tối đa của nút */
+/* Tiêu đề chính */
+h1 {
+    color: black;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-/* Thêm hiệu ứng khi di chuột qua nút */
-#start-button:hover {
-    background-color: #45a049;
+/* Phần header */
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
-/* Căn chỉnh các phần tử trong game-board */
-#score-board {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-#player-turn {
-    font-weight: bold;
-    font-size: 18px;
-    margin: 10px 0;
-}
-
-#previous-word {
-    font-size: 16px;
-    margin: 10px 0;
-}
-
-#input-field {
+.head input {
     padding: 10px;
-    font-size: 16px;
-    margin: 10px 0;
-    width: 100%;
-    max-width: 400px;
-    /* Giới hạn chiều rộng của input */
+    font-size: 1rem;
     border-radius: 5px;
     border: 1px solid #ccc;
+    width: 300px;
+    outline: none;
+    transition: border-color 0.3s ease;
 }
 
-#input-field:focus {
-    outline: none;
+.head input:focus {
     border-color: #4CAF50;
 }
 
-/* Thêm hiệu ứng countdown */
-#countdown-circle {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background-color: #f4f4f4;
-    margin: 20px auto;
-}
-
-#progress-bar {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background-color: #4CAF50;
-    transition: width 1s;
-}
-
-#time-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 18px;
-    font-weight: bold;
-}
-
-/* Cải thiện giao diện cho màn hình điện thoại */
-@media (max-width: 768px) {
-    #game-board {
-        width: 90%;
-        padding: 15px;
-    }
-
-    #start-button {
-        font-size: 16px;
-    }
-
-    #input-field {
-        font-size: 14px;
-    }
-}
-
-.try-again-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.8);
+.head button {
+    padding: 10px 20px;
+    background-color: black;
     color: white;
-    padding: 30px 50px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    font-size: 18px;
-    display: none;
-    z-index: 1000;
-    max-width: 400px;
-    text-align: center;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.try-again-modal.show {
-    display: block;
-    opacity: 1;
-}
-
-.yes-btn {
-    display: inline-block;
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px 30px;
-    font-size: 16px;
-    text-decoration: none;
+    font-size: 1rem;
+    border: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 20px;
-    width: 150px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.yes-btn:hover {
+.head button:hover {
     background-color: #45a049;
-    transform: scale(1.1);
 }
 
-.yes-btn:active {
-    transform: scale(0.95);
+.head button:focus {
+    outline: none;
 }
 
-.no-btn {
-    display: inline-block;
-    background-color: #f44336;
-    color: white;
-    padding: 15px 30px;
-    font-size: 16px;
-    text-decoration: none;
+/* Phần tạo phòng */
+/* Phần tạo phòng */
+.createRoom {
+    display: none;
+    /* Ẩn form khi không sử dụng */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    width: 50%;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
+}
+
+.createRoom fieldset {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.createRoom legend {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.createRoom label {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    display: block;
+    color: #333;
+}
+
+.createRoom input,
+.createRoom select {
+    padding: 10px;
+    font-size: 1rem;
     border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 10px;
-    width: 150px;
+    border: 1px solid #ccc;
+    width: 100%;
+    margin-bottom: 15px;
+    outline: none;
 }
 
-.no-btn:hover {
-    background-color: #d32f2f;
-    transform: scale(1.1);
+.createRoom input:focus,
+.createRoom select:focus {
+    border-color: #4CAF50;
 }
 
-.no-btn:active {
-    transform: scale(0.95);
+.createRoom button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.createRoom button:hover {
+    background-color: #45a049;
+}
+
+.createRoom button:focus {
+    outline: none;
+}
+
+.createRoom .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.3s;
+}
+
+.createRoom .close-btn:hover {
+    color: #f00;
+}
+
+.createRoom .close-btn:focus {
+    outline: none;
+}
+
+.createRoom.show {
+    display: block;
+}
+
+/* Phần danh sách phòng */
+.list {
+    margin-top: 30px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+#roomList {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#roomList th,
+#roomList td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#roomList th {
+    background-color: #f4f4f4;
+    color: black;
+    font-size: 1.2rem;
+}
+
+#roomList tr:hover {
+    background-color: #f1f1f1;
+}
+
+#roomList a {
+    background-color: #008CBA;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+#roomList a:hover {
+    background-color: #005f6b;
+}
+
+/* Khi người dùng hover vào các button trong bảng */
+#roomList a:focus {
+    outline: none;
 }
