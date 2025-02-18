@@ -1,4 +1,3 @@
-/* Căn chỉnh và làm cho toàn bộ game có không gian rộng hơn */
 .game {
     display: flex;
     flex-direction: column;
@@ -10,20 +9,17 @@
     font-family: Arial, sans-serif;
 }
 
-/* Thêm phần căn chỉnh cho bảng game */
 #game-board {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 80%;
-    /* Đảm bảo game board có chiều rộng phù hợp */
     max-width: 600px;
-    /* Giới hạn chiều rộng tối đa */
     margin-top: 30px;
 }
 
-/* Định dạng nút START */
+
 #start-button {
     background-color: #4CAF50;
     color: white;
@@ -35,17 +31,15 @@
     transition: background-color 0.3s;
     margin-top: 20px;
     width: 100%;
-    /* Nút sẽ chiếm toàn bộ chiều rộng của phần chứa */
     max-width: 200px;
-    /* Giới hạn chiều rộng tối đa của nút */
+
 }
 
-/* Thêm hiệu ứng khi di chuột qua nút */
 #start-button:hover {
     background-color: #45a049;
 }
 
-/* Căn chỉnh các phần tử trong game-board */
+
 #score-board {
     font-size: 18px;
     margin-bottom: 10px;
@@ -68,7 +62,7 @@
     margin: 10px 0;
     width: 100%;
     max-width: 400px;
-    /* Giới hạn chiều rộng của input */
+
     border-radius: 5px;
     border: 1px solid #ccc;
 }
@@ -78,7 +72,6 @@
     border-color: #4CAF50;
 }
 
-/* Thêm hiệu ứng countdown */
 #countdown-circle {
     position: relative;
     width: 100px;
@@ -106,7 +99,7 @@
     font-weight: bold;
 }
 
-/* Cải thiện giao diện cho màn hình điện thoại */
+
 @media (max-width: 768px) {
     #game-board {
         width: 90%;

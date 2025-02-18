@@ -1,11 +1,9 @@
-/* Reset một số thuộc tính mặc định của trình duyệt */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Toàn bộ body */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f9;
@@ -13,7 +11,7 @@ body {
     padding: 20px;
 }
 
-/* Tiêu đề chính */
+
 h1 {
     color: black;
     font-size: 2rem;
@@ -63,10 +61,8 @@ h1 {
 }
 
 /* Phần tạo phòng */
-/* Phần tạo phòng */
 .createRoom {
     display: none;
-    /* Ẩn form khi không sử dụng */
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -199,7 +195,6 @@ h1 {
     background-color: #005f6b;
 }
 
-/* Khi người dùng hover vào các button trong bảng */
 #roomList a:focus {
     outline: none;
 }
