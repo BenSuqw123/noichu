@@ -22,13 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('./JSON/words.json')
             .then(response => response.json())
             .then(data => {
-                const dictionary = {}; // Tạo đối tượng dictionary
+                const dictionary = {};
                 for (const word of data) {
-                    dictionary[word.toLowerCase()] = true;  // Chuyển về chữ thường để so sánh dễ dàng hơn
+                    dictionary[word.toLowerCase()] = true;
                 }
 
                 function checkWord(word) {
-                    return word.toLowerCase() in dictionary;  // Kiểm tra từ trong dictionary
+                    return word.toLowerCase() in dictionary;
                 }
 
                 function isWordInList(word, list) {
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let currentPlayer = 1;
                 let scores = { 1: 0, 2: 0 };
                 let timerInterval;
-                let timeLeft = 10; // Cài đặt thời gian đếm ngược bắt đầu là 20 giây
+                let timeLeft = 10;
                 let countdownInterval;
                 let aiTime = Math.floor(Math.random() * (10 - 5 + 1)) + 5;
 
@@ -67,35 +67,35 @@ document.addEventListener('DOMContentLoaded', () => {
                                     gameOver();
                                 } else {
                                     const wordListItem = document.createElement('li');
-                                    wordListItem.textContent = userInput.toLowerCase();  // Chỉ thêm một lần
+                                    wordListItem.textContent = userInput.toLowerCase();
                                     wordList.appendChild(wordListItem);
-                                    timeLeft = 10;  // Reset lại thời gian mỗi lần nhập từ mới
+                                    timeLeft = 10;
                                 }
 
-                                // Cập nhật từ trước
+
                                 previousWord = userInput;
                                 previousWordElement.textContent = `Previous word: ${previousWord}`;
                                 wordStartElement.textContent = `Find word starting with ${userInput.slice(-1)}`;
 
-                                // Cập nhật điểm
+
                                 scores[currentPlayer]++;
                                 player1ScoreElement.textContent = scores[1];
                                 player2ScoreElement.textContent = scores[2];
 
-                                // Chuyển lượt chơi
-                                currentPlayer = 3 - currentPlayer; // Đổi giữa 1 và 2
+
+                                currentPlayer = 3 - currentPlayer;
                                 playerTurnElement.textContent = `Player ${currentPlayer}'s turn`;
 
-                                // Xóa trường nhập liệu
+
                                 inputField.value = '';
 
-                                // Reset lại đồng hồ đếm ngược
-                                clearInterval(countdownInterval);  // Dừng đồng hồ cũ
+
+                                clearInterval(countdownInterval);
                                 countdownInterval = setInterval(() => {
-                                    timeLeft--;  // Giảm thời gian mỗi giây
-                                    countdownElement.textContent = `${timeLeft}`;  // Hiển thị thời gian còn lại
+                                    timeLeft--;
+                                    countdownElement.textContent = `${timeLeft}`;
                                     if (currentPlayer == 2 && timeLeft == aiTime) {
-                                        inputField.disabled = false;  // Bật lại trường nhập liệu cho người chơi
+                                        inputField.disabled = false;
                                         AIplay();
                                     }
 
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         alert(`Time's up! Player ${currentPlayer} couldn't think of a word.`);
                                         gameOver();
                                     }
-                                }, 1000);  // Cập nhật mỗi giây
+                                }, 1000);
                                 aiTime = Math.floor(Math.random() * (10 - 5 + 1)) + 5;
                             } else {
                                 alert(`Sorry, ${userInput} doesn't start with ${lastLetter}`);
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 function gameOver() {
-                    clearInterval(countdownInterval);  // Dừng đồng hồ đếm ngược khi trò chơi kết thúc
+                    clearInterval(countdownInterval);
                     playerTurnElement.textContent = 'Game Over!';
                     scoreBoard.style.fontWeight = 'bold';
                     if (scores[1] > scores[2]) {
@@ -132,21 +132,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 function AIplay() {
-                    const lastLetter = previousWord.slice(-1).toLowerCase();  // Chữ cái cuối cùng của từ trước
+                    const lastLetter = previousWord.slice(-1).toLowerCase();
                     for (const word of data) {
                         if (word.toLowerCase().startsWith(lastLetter) && !isWordInList(word, wordList)) {
-                            inputField.value = word;  // AI tự nhập từ hợp lệ
-
+                            inputField.value = word;
                             // Giả lập nhấn Enter mà không cần sự kiện "keydown"
-                            handleWordSubmission(word);  // Gọi trực tiếp hàm xử lý từ nhập
-                            break;  // Dừng vòng lặp sau khi AI nhập một từ
+                            handleWordSubmission(word);
+                            break;
                         }
                     }
 
-                    // Sau khi AI chơi xong, bật lại trường nhập liệu cho người chơi
+
                     setTimeout(() => {
-                        inputField.disabled = false;  // Bật lại trường nhập liệu
-                    }, 1000); // Delay 1 giây để tạo hiệu ứng chuyển lượt
+                        inputField.disabled = false;
+                    }, 1000);
                 }
 
                 function handleWordSubmission(userInput) {
@@ -162,35 +161,35 @@ document.addEventListener('DOMContentLoaded', () => {
                                 gameOver();
                             } else {
                                 const wordListItem = document.createElement('li');
-                                wordListItem.textContent = userInput.toLowerCase();  // Chỉ thêm một lần
+                                wordListItem.textContent = userInput.toLowerCase();
                                 wordList.appendChild(wordListItem);
-                                timeLeft = 10;  // Reset lại thời gian mỗi lần nhập từ mới
+                                timeLeft = 10;
                             }
 
-                            // Cập nhật từ trước
+
                             previousWord = userInput;
                             previousWordElement.textContent = `Previous word: ${previousWord}`;
                             wordStartElement.textContent = `Find word starting with ${userInput.slice(-1)}`;
 
-                            // Cập nhật điểm
+
                             scores[currentPlayer]++;
                             player1ScoreElement.textContent = scores[1];
                             player2ScoreElement.textContent = scores[2];
 
-                            // Chuyển lượt chơi
-                            currentPlayer = 3 - currentPlayer; // Đổi giữa 1 và 2
+
+                            currentPlayer = 3 - currentPlayer;
                             playerTurnElement.textContent = `Player ${currentPlayer}'s turn`;
 
-                            // Xóa trường nhập liệu
+
                             inputField.value = '';
 
-                            // Reset lại đồng hồ đếm ngược
-                            clearInterval(countdownInterval);  // Dừng đồng hồ cũ
+
+                            clearInterval(countdownInterval);
                             countdownInterval = setInterval(() => {
-                                timeLeft--;  // Giảm thời gian mỗi giây
-                                countdownElement.textContent = `${timeLeft}`;  // Hiển thị thời gian còn lại
+                                timeLeft--;
+                                countdownElement.textContent = `${timeLeft}`;
                                 if (currentPlayer == 2 && timeLeft == aiTime) {
-                                    inputField.disabled = false;  // Bật lại trường nhập liệu cho người chơi
+                                    inputField.disabled = false;
                                     AIplay();
                                 }
 
@@ -198,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     alert(`Time's up! Player ${currentPlayer} couldn't think of a word.`);
                                     gameOver();
                                 }
-                            }, 1000);  // Cập nhật mỗi giây
+                            }, 1000);
                             aiTime = Math.floor(Math.random() * (10 - 5 + 1)) + 5;
                         } else {
                             alert(`Sorry, ${userInput} doesn't start with ${lastLetter}`);
@@ -208,16 +207,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-                // Bắt đầu trò chơi với đồng hồ đếm ngược ban đầu
+
                 countdownInterval = setInterval(() => {
-                    timeLeft--;  // Giảm thời gian mỗi giây
+                    timeLeft--;
                     countdownElement.textContent = `${timeLeft}`;
 
                     if (timeLeft <= 0) {
                         alert(`Time's up! Player ${currentPlayer} couldn't think of a word.`);
                         gameOver();
                     }
-                }, 1000);  // Cập nhật mỗi giây
+                }, 1000);
             })
             .catch(error => console.error('Lỗi tải dữ liệu:', error));
     });
