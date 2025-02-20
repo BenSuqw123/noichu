@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const port = 3000; // Đặt cổng server
+const port = process.env.PORT || 3000 // Đặt cổng server
 
 
 // window.location.pathname.split('/').slice(-1)[0]
