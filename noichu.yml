@@ -1,0 +1,38 @@
+# version: '3.8'
+# services:
+#   db-mysql:
+#     image: mysql:5.7.40
+#     restart: always
+#     environment:
+#       - MYSQL_DATABASE=noichu
+#       - MYSQL_ROOT_PASSWORD=123456
+#       - MYSQL_USER=noichu_user
+#       - MYSQL_PASSWORD=123456
+#     ports:
+#       - "3306:3306"
+version: '3.8'
+services:
+  db-mysql:
+    image: mysql:5.7.40
+    restart: always
+    environment:
+      - MYSQL_DATABASE=noichu
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_USER=noichu_user
+      - MYSQL_PASSWORD=123456
+    ports:
+      - "3306:3306"
+
+  app:
+    build: .
+    restart: always
+    depends_on:
+      - db-mysql
+    environment:
+      - DB_HOST=db-mysql
+      - DB_USER=noichu_user
+      - DB_PASSWORD=123456
+      - DB_NAME=noichu
+      - DB_PORT=3306
+    ports:
+      - "3000:3000"
