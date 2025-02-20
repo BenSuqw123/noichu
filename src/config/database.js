@@ -1,21 +1,15 @@
-const mysql = require('mysql2/promise')
-console.log("🔍 Connecting to DB with:");
-console.log("Host:", process.env.DB_HOST);
-console.log("User:", process.env.DB_USER);
-console.log("Database:", process.env.DB_DATABASE);
-console.log("Port:", process.env.DB_PORT);
+const mysql = require('mysql2/promise');
 
-//connection database
+// Cấu hình kết nối đến Railway
 const connection = mysql.createPool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
+    host: 'maglev.proxy.rlwy.net',
+    port: 43963,
+    user: 'noichu_user',
+    password: '123456', // Thay bằng mật khẩu đúng
+    database: 'noichu',
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 10,
-    connectTimeout: 10000
-
+    queueLimit: 0
 });
-module.exports = connection
+
+module.exports = connection;
