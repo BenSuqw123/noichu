@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HomePage</title>
-    <script src="/socket.io/socket.io.js"></script> <!-- Đảm bảo socket.io-client được tải từ server -->
+    <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="./css/styleHome.css">
     <script>
-        var socket = io(); // Kết nối đến server socket
+        var socket = io();
 
         socket.on('connect', function () {
             console.log('Đã kết nối tới server với id: ' + socket.id);
@@ -23,7 +23,7 @@
 
 <body>
     <div class="container">
-        <h1>Chào Mừng Bạn Đến Với Chò Chơi Nối Chữ</h1>
+        <h1>Chào Mừng Bạn Đến Với Trò Chơi Nối Chữ</h1>
         <div class="buttons">
             <a href="/noichu" class="play-button-link">
                 <button class="play-button">Chơi Với Máy</button>
